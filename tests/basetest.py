@@ -15,8 +15,8 @@ from datetime import datetime
 URL = 'http://146.185.169.28/doorhan_test/'
 LOGIN = config['login']
 PASS = config['pass']
-ORDER_NAME_1C = config['order_name_1c']
 LOGGER.setLevel(logging.WARNING)
+
 
 class BaseTest(unittest.TestCase):
 

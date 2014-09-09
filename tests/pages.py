@@ -642,7 +642,7 @@ class NomenclatureAdditional(ConstructorElement):
             self.save_element()
 
         def save_element(self):
-            self.driver.find_element_by_css_selector("#yt1").click()
+            self.driver.find_element_by_css_selector("#yt2").click()
 
         def sendkeys_by_label_text(self, label_text, text_to_type):
             element = self.driver.find_element_by_xpath(

@@ -51,8 +51,7 @@ class BaseTest(unittest.TestCase):
             print "[[ATTACHMENT|%s]]" % file_name
             print "current url - %s" % self.driver.current_url
 
-        self.driver.get(''.join([pages.LoginPage.url, 'site/logout']))
-        # self.driver.find_element_by_css_selector(".button-exit").click()
+        # self.driver.get(''.join([pages.LoginPage.url, 'site/logout']))
 
     @classmethod
     def tearDownClass(cls):

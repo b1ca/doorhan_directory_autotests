@@ -517,12 +517,21 @@ class Embedded(ConstructorElement):
             for param in params_list:
                 self.do_action(param)
 
-            self.driver.find_element_by_css_selector("#yt0").click()
+            self.driver.find_element_by_css_selector("#productField").clear()
+            self.driver.find_element_by_css_selector("#productField").send_keys("RSD 02")
+            self.driver.find_element_by_css_selector("#productField").click()
+            self.driver.find_element_by_xpath("//a[text()='RSD 02']").click()
+
+            self.driver.find_element_by_xpath("//a[contains(text(), 'Карты вывода')]").click()
+            for_attr = self.driver.find_element_by_xpath("//label[.='Цех']").get_attribute('for')
+            self.driver.find_element_by_id(for_attr).click()
+
+            self.driver.find_element_by_css_selector("#embeddedAdd").click()
             self.wait_until_jquery(5)
 
         def embedded_has_params(self, params_list):
             result = all(self.check_params_on_page(param) for param in params_list)
-            self.driver.find_element_by_css_selector("#yt0").click()
+            self.driver.find_element_by_css_selector("#embeddedAdd").click()
             return result
 
         def get_element_by_label_text(self, label_text):

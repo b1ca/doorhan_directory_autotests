@@ -5,6 +5,7 @@ from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import time
 
 
 class BasePage(object):
@@ -371,6 +372,9 @@ class ConstructorElement(BasePage):
         def choose_nth_item(self, n):
             self.driver.find_elements_by_css_selector("a.update")[n].click()
 
+        def save_element(self):
+            self.driver.find_element_by_css_selector("#yt2").click()
+
 
 class Group(ConstructorElement):
 
@@ -639,7 +643,8 @@ class NomenclatureAdditional(ConstructorElement):
             self.driver.find_element_by_xpath("//a[text()='RSD 02']").click()
 
             checkbox_text = 'Цех'
-            self.driver.find_element_by_css_selector('.ui-multiselect').click()
+            time.sleep(3)
+            self.driver.find_elements_by_css_selector('.ui-multiselect')[0].click()
             self.driver.find_element_by_xpath("//label/span[.='%s']/../input" % checkbox_text).click()
 
             self.wait_until_text_present(10, (By.CSS_SELECTOR, "select[id*=ProductModel_0_specification_id]"), " ")
@@ -651,7 +656,7 @@ class NomenclatureAdditional(ConstructorElement):
             self.save_element()
 
         def save_element(self):
-            self.driver.find_element_by_css_selector("#yt2").click()
+            self.driver.find_element_by_css_selector("#yt1").click()
 
         def sendkeys_by_label_text(self, label_text, text_to_type):
             element = self.driver.find_element_by_xpath(

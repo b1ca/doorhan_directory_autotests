@@ -1,7 +1,6 @@
 #coding=utf-8
 from __future__ import unicode_literals
 import random
-from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -9,7 +8,7 @@ import time
 
 
 class BasePage(object):
-    url = None
+    url = 'http://146.185.169.28/doorhan_test/'
 
     def __init__(self, driver):
         self.driver = driver
@@ -38,7 +37,6 @@ class BasePage(object):
 
 
 class LoginPage(BasePage):
-    url = "http://146.185.169.28/doorhan_test/"
 
     def do_login(self, login, password):
         self.driver.find_element_by_css_selector("#LoginForm_username").send_keys(login)
@@ -98,10 +96,9 @@ class ConstructorElement(BasePage):
             self.navigate_item("colors")
             return Color(self.driver)
 
-        def navigate_item(self, item_type, vertical_menu_css=".vertical-menu"):
-            vertical_menu = self.driver.find_element_by_css_selector(vertical_menu_css)
-            ActionChains(self.driver).move_to_element(vertical_menu).perform()
-            self.driver.find_element_by_css_selector(vertical_menu_css + " a[href$="+item_type+"]").click()
+        def navigate_item(self, item_type):
+            item_url = ''.join([self.url, '/constructor/', item_type])
+            self.driver.get(item_url)
 
         def add_item(self, item_name):
             self.driver.execute_script("$('#add-"+self.item_type+"').dialog('open');")  # open dialog add group

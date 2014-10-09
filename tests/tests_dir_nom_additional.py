@@ -6,8 +6,6 @@ import basetest
 
 class TestDirNomAdditional(basetest.BaseTest):
 
-    #TODO баг дурхана
-
     def test01_add_nom_element(self):
         main_page = pages.MainPage(self.driver)
         constructor_page = main_page.navigate_cp()

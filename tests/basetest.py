@@ -50,8 +50,8 @@ class BaseTest(unittest.TestCase):
             # for jenkins integration
             print "[[ATTACHMENT|%s]]" % file_name
             print "current url - %s" % self.driver.current_url
-
-        # self.driver.get(''.join([pages.LoginPage.url, 'site/logout']))
+        if not 'debug' in config:
+            self.driver.get(''.join([pages.LoginPage.url, 'site/logout']))
 
     @classmethod
     def tearDownClass(cls):

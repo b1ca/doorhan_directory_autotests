@@ -431,10 +431,7 @@ class Shield(ConstructorElement):
 
         def update_group(self, params_list):
             for param in params_list:
-                #TODO remove print
-                print '- %s' % param
                 self.do_action(param)
-                print '+ %s' % param
 
             self.driver.find_element_by_css_selector("#yt2").click()
 
@@ -659,7 +656,12 @@ class NomenclatureAdditional(ConstructorElement):
             self.save_element()
 
         def save_element(self):
-            self.driver.find_element_by_css_selector("#yt1").click()
+            self.driver.find_element_by_css_selector("#yt2").click()
+
+        def get_element_by_label_text(self, label_text):
+            element = self.driver.find_element_by_xpath("//label[normalize-space(text()) = '%s']" % label_text)
+            element_id = element.get_attribute("for")
+            return self.driver.find_element_by_id(element_id)
 
         def sendkeys_by_label_text(self, label_text, text_to_type):
             element = self.driver.find_element_by_xpath(
@@ -690,7 +692,6 @@ class NomenclatureAdditional(ConstructorElement):
 
         def nom_element_has_params(self, params_list):
             result = all(self.check_params_on_page(param) for param in params_list)
-
             self.driver.find_element_by_css_selector(".btn-white a").click()
             return result
 

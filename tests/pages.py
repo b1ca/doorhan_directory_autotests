@@ -243,7 +243,7 @@ class ConstructorElement(BasePage):
                 self.driver.find_element_by_xpath("(//div[@class='module-tab'])[last()]").clear()
                 self.driver.find_element_by_xpath("(//div[@class='module-tab'])[last()]").send_keys(text_to_do)
                 self.driver.find_element_by_xpath("(//span[@class='ui-button-text'][text()='Ок'])[last()]").click()
-                self.wait_until_jquery(5)
+                time.sleep(3)
             elif action == "checkbox_weight_code":
                 element = self.driver.find_element_by_xpath(
                     "//label[normalize-space(text()) = '"+act[1][0]+"']/..//input[not(@type = 'hidden')]")
@@ -276,12 +276,12 @@ class ConstructorElement(BasePage):
             return element
 
         def get_elements_by_label_text(self, label_text):
-            elements = self.driver.find_elements_by_xpath("//label[text() = '" +
-                                                          label_text+"']/..//input[not(@type = 'hidden')]")
+            elements = self.driver.find_elements_by_xpath(
+                "//label[starts-with(.,'%s')]/..//input[not(@type = 'hidden')]" % label_text)
             return elements
 
         def get_fx_element_by_label_text(self, label_text, n):
-            element = self.driver.find_elements_by_xpath("//label[normalize-space(text()) = '"+label_text+"']/..//a")[n]
+            element = self.driver.find_elements_by_xpath("//label[starts-with(.,'%s')]/..//a" % label_text)[n]
             return element
 
         def sendkeys_by_label_text(self, label_text, text_to_type):
@@ -290,8 +290,8 @@ class ConstructorElement(BasePage):
             element.send_keys(text_to_type)
 
         def get_option_by_label_text(self, label_text, option):
-            return self.driver.find_element_by_xpath("//label[normalize-space(text()) = '" +
-                                                     label_text+"']/..//select/option[text() = '"+option+"']")
+            return self.driver.find_element_by_xpath(
+                "//label[starts-with(.,'%s')]/..//select/option[text()='%s']" % (label_text, option))
 
         def get_checkbox_by_label_text(self, label_text):
             return self.get_element_by_label_text(label_text)
@@ -409,13 +409,16 @@ class Shield(ConstructorElement):
             self.driver.find_element_by_css_selector("a[href$='addGroup']").click()
             self.driver.find_element_by_css_selector("#ShieldGroupModel_title").clear()
             self.driver.find_element_by_css_selector("#ShieldGroupModel_title").send_keys(shield_name)
-            self.driver.find_element_by_css_selector(".autocompleteProducts").click()
-            self.driver.find_element_by_css_selector(".autocompleteProducts").send_keys("RSD 02")
-            self.driver.find_element_by_xpath("//a[text()='RSD 02']").click()
+
+            self.driver.find_element_by_xpath(
+                '//span[contains(text(), "Наименование")]/..//button[contains(@class, "ui-multiselect")]').click()
+            self.driver.find_element_by_xpath('//span[.="RSD 02"]').click()
+            time.sleep(5)
 
             checkbox_text = 'Цех'
-            self.driver.find_element_by_css_selector('.ui-multiselect').click()
-            self.driver.find_element_by_xpath("//label/span[.='%s']/../input" % checkbox_text).click()
+            self.driver.find_element_by_xpath(
+                '//span[contains(text(), "Карты")]/..//button[contains(@class, "ui-multiselect")]').click()
+            self.driver.find_element_by_xpath('//span[.="%s"]' % checkbox_text).click()
             self.wait_until_jquery(10)
 
             # if add_new_product:
@@ -428,7 +431,10 @@ class Shield(ConstructorElement):
 
         def update_group(self, params_list):
             for param in params_list:
+                #TODO remove print
+                print '- %s' % param
                 self.do_action(param)
+                print '+ %s' % param
 
             self.driver.find_element_by_css_selector("#yt2").click()
 

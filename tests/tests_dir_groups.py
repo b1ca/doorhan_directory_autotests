@@ -43,10 +43,10 @@ class TestDirGroups(basetest.BaseTest):
         num_of_group = random.randrange(0, 10)
         new_group_name = "test_QWERT_" + str(random.randrange(0, 150))
         old_group_name = group.get_item_name_by_num(num_of_group)
-        print "old_group_name = %s" % old_group_name
         group.change_item_name(old_group_name, new_group_name)
         self.assertTrue(group.have_item(new_group_name))
         group.change_item_name(new_group_name, old_group_name)
+        self.assertTrue(group.have_item(old_group_name))
 
     def test05_change_element_param(self):
         main_page = pages.MainPage(self.driver)

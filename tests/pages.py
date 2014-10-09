@@ -166,11 +166,12 @@ class ConstructorElement(BasePage):
             self.update_element_params(element_params)
             return element_text
 
-        def change_element_params(self, element_to_change, element_params):
-            self.driver.find_elements_by_css_selector("a.update")[element_to_change].click()
-            old_color = self.get_element_color()
-            self.update_element_params(element_params)
-            return old_color
+        #TODO remove?
+        # def change_element_params(self, element_to_change, element_params):
+        #     self.driver.find_elements_by_css_selector("a.update")[element_to_change].click()
+        #     old_color = self.get_element_color()
+        #     self.update_element_params(element_params)
+        #     return old_color
 
         def get_element_color(self):
             return self.driver.find_element_by_css_selector("#NomenclatureGroupElementsModel_color_val").text
@@ -193,13 +194,14 @@ class ConstructorElement(BasePage):
             self.wait_until_jquery(5)
             return element_text
 
-        def element_has_params(self, element_number, element_params):
-            import time
-            time.sleep(3)
-            self.driver.find_elements_by_css_selector("a.update")[element_number].click()
-            if element_params["color"]:
-                color_field = self.driver.find_element_by_css_selector("#NomenclatureGroupElementsModel_color_val")
-                return element_params["color"].lower() in color_field.get_attribute("value").lower()
+        #TODO remove?
+        # def element_has_params(self, element_number, element_params):
+        #     import time
+        #     time.sleep(3)
+        #     self.driver.find_elements_by_css_selector("a.update")[element_number].click()
+        #     if element_params["color"]:
+        #         color_field = self.driver.find_element_by_css_selector("#NomenclatureGroupElementsModel_color_val")
+        #         return element_params["color"].lower() in color_field.get_attribute("value").lower()
 
         def have_element(self, element_text, num_of_elements):
             import time
@@ -376,6 +378,29 @@ class ConstructorElement(BasePage):
 class Group(ConstructorElement):
 
         item_type = "group"
+
+        def change_item_name(self, old_item_name, new_item_name):
+            self.driver.find_element_by_xpath("(//span[text()='"+old_item_name+"']/../..//a)[1]").click()
+            self.wait_until_jquery(5)
+            item_name_input = self.driver.find_element_by_css_selector("#NomenclatureGroupsModelEdit_title")
+            item_name_input.clear()
+            item_name_input.send_keys(new_item_name)
+            self.driver.find_element_by_css_selector("#%s_edit_submit" % self.item_type).click()
+            self.wait_until_jquery(10)
+
+        def change_element_params(self, element_to_change, element_params):
+            self.driver.find_elements_by_css_selector('td.button-column a[href*="edit"]')[element_to_change].click()
+            old_color = self.get_element_color()
+            self.update_element_params(element_params)
+            return old_color
+
+        def element_has_params(self, element_number, element_params):
+            import time
+            time.sleep(3)
+            self.driver.find_elements_by_css_selector('td.button-column a[href*="edit"]')[element_number].click()
+            if element_params["color"]:
+                color_field = self.driver.find_element_by_css_selector("#NomenclatureGroupElementsModel_color_val")
+                return element_params["color"].lower() in color_field.get_attribute("value").lower()
 
 
 class Analog(ConstructorElement):

@@ -217,9 +217,6 @@ class ConstructorElement(BasePage):
         def delete_added_element(self):
             self.wait_until_jquery(5)
             self.driver.find_elements_by_css_selector("a.delete")[0].click()
-            # self.driver.refresh()
-            # import time
-            # time.sleep(3)
 
         def do_action(self, act):
             action = act[0]
@@ -478,16 +475,9 @@ class Shield(ConstructorElement):
         def delete_group(self, group_name):
             delete_btn = self.driver.find_element_by_xpath(
                 "//a[text()='"+group_name+"']/..//a[@class='shield-group-action delete']")
-            # delete_btn_id = self.driver.find_element_by_xpath("//a[text()='"+group_name+"']").get_attribute("data-id")
             delete_btn.click()
-            # delete_url_to_post = self.driver.current_url + "/deleteGroup"
-            # delete_js = "$.post('"+delete_url_to_post+"',{id:'"+delete_btn_id+"',ajax:'shield-group-list'} );"
-            # self.driver.execute_script(delete_js)
             alert = self.driver.switch_to_alert()
             alert.accept()
-            # import time
-            # time.sleep(2)
-            # self.driver.refresh()
             self.wait_until_jquery(10)
             self.driver.implicitly_wait(2)
 
@@ -506,7 +496,6 @@ class Shield(ConstructorElement):
 
         def shield_has_params(self, params_list):
             result = all(self.check_params_on_page(param) for param in params_list)
-            # self.driver.back()
             self.driver.find_element_by_css_selector(".btn-white a").click()
             return result
 
@@ -541,7 +530,7 @@ class Embedded(ConstructorElement):
             self.driver.find_element_by_css_selector(".autocompleteProducts").clear()
             self.driver.find_element_by_css_selector(".autocompleteProducts").send_keys("RSD 02")
             self.driver.find_element_by_css_selector(".autocompleteProducts").click()
-            self.driver.find_element_by_xpath("//a[text()='RSD 02']").click()
+            self.driver.find_elements_by_xpath("//a[text()='RSD 02']")[0].click()
 
             for param in params_list:
                 self.do_action(param)
@@ -549,7 +538,7 @@ class Embedded(ConstructorElement):
             self.driver.find_element_by_css_selector("#productField").clear()
             self.driver.find_element_by_css_selector("#productField").send_keys("RSD 02")
             self.driver.find_element_by_css_selector("#productField").click()
-            self.driver.find_element_by_xpath("//a[text()='RSD 02']").click()
+            self.driver.find_elements_by_xpath("//a[text()='RSD 02']")[-1].click()
 
             self.driver.find_element_by_xpath("//a[contains(text(), 'Карты вывода')]").click()
             for_attr = self.driver.find_element_by_xpath("//label[.='Цех']").get_attribute('for')

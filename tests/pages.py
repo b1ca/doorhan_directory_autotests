@@ -564,7 +564,7 @@ class Driver(ConstructorElement):
             checkbox_text = 'Цех'
             self.driver.find_element_by_css_selector('.ui-multiselect').click()
             self.driver.find_element_by_xpath("//label/span[.='%s']/../input" % checkbox_text).click()
-            self.wait_until_jquery(10)
+            time.sleep(3)
 
             self.choose_driver_type()
             if params_list:
@@ -600,6 +600,11 @@ class Driver(ConstructorElement):
             self.driver.find_element_by_css_selector(".autocompleteProducts").clear()
             self.driver.find_element_by_css_selector(".autocompleteProducts").send_keys("RSD 02")
             self.driver.find_element_by_xpath("//a[text()='RSD 02']").click()
+
+            checkbox_text = 'Цех'
+            self.driver.find_element_by_css_selector('.ui-multiselect').click()
+            self.driver.find_element_by_xpath("//label/span[.='%s']/../input" % checkbox_text).click()
+            time.sleep(3)
 
         def have_driver(self):
             self.wait_until_title_is_equal(5, "Doorhan - Приводы")

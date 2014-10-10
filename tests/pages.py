@@ -675,7 +675,7 @@ class NomenclatureAdditional(ConstructorElement):
             self.save_element()
 
         def save_element(self):
-            if "None" in str(self.driver.execute_script("$('#yt2').length")):
+            if not "None" in str(self.driver.execute_script("$('#yt2').length")):
                 self.driver.find_element_by_css_selector("#yt2").click()
             else:
                 self.driver.find_element_by_css_selector("#yt1").click()

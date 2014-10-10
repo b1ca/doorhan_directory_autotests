@@ -732,6 +732,9 @@ class AdditionalMaterial(NomenclatureAdditional):
             element = self.driver.find_elements_by_css_selector("tbody td:nth-of-type(4)")[0]
             return self.element_text == element.text
 
+        def save_element(self):
+            self.driver.find_element_by_css_selector("#yt1").click()
+
 
 class DriverSet(NomenclatureAdditional):
 
@@ -759,6 +762,9 @@ class Service(NomenclatureAdditional):
             else:
                 element = self.driver.find_elements_by_css_selector("tbody td:nth-of-type(4)")[0]
                 return self.element_text == element.text
+
+        def save_element(self):
+            self.driver.find_element_by_css_selector("#yt1").click()
 
 
 class Color(ConstructorElement):

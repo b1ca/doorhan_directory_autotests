@@ -161,7 +161,8 @@ class ConstructorElement(BasePage):
 
         def add_element(self, element_params, element_name="", selector="a[href*='add']"):
             self.driver.find_element_by_css_selector(selector).click()
-            self.driver.execute_script("$('#dictionary-nomenclature').dialog('open'); return false;")
+            self.driver.find_element_by_css_selector('a[onclick*="$(\"#dictionary-nomenclature\").dialog(\"open\")"]')
+            # self.driver.execute_script("$('#dictionary-nomenclature').dialog('open'); return false;")
             element_text = self.choose_random_element_from_dict()
             self.update_element_params(element_params)
             return element_text
@@ -541,6 +542,7 @@ class Embedded(ConstructorElement):
             self.driver.find_element_by_css_selector("#productField").clear()
             self.driver.find_element_by_css_selector("#productField").send_keys("RSD 02")
             self.driver.find_element_by_css_selector("#productField").click()
+            time.sleep(3)
             self.driver.find_elements_by_xpath("//a[text()='RSD 02']")[-1].click()
 
             self.driver.find_element_by_xpath("//a[contains(text(), 'Карты вывода')]").click()

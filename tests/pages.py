@@ -743,6 +743,9 @@ class DriverSet(NomenclatureAdditional):
             element = self.driver.find_elements_by_css_selector("tbody td:nth-of-type(4)")[0]
             return self.element_text == element.text
 
+        def save_element(self):
+            self.driver.find_element_by_css_selector("#yt2").click()
+
 
 class Service(NomenclatureAdditional):
 

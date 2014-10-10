@@ -369,7 +369,10 @@ class ConstructorElement(BasePage):
             self.driver.find_elements_by_css_selector("a.update")[n].click()
 
         def save_element(self):
-            self.driver.find_element_by_css_selector("#yt2").click()
+            if not "None" in str(self.driver.execute_script("$('#yt2').length")):
+                self.driver.find_element_by_css_selector("#yt2").click()
+            else:
+                self.driver.find_element_by_css_selector("#yt1").click()
 
 
 class Group(ConstructorElement):
@@ -675,10 +678,7 @@ class NomenclatureAdditional(ConstructorElement):
             self.save_element()
 
         def save_element(self):
-            if not "None" in str(self.driver.execute_script("$('#yt2').length")):
-                self.driver.find_element_by_css_selector("#yt2").click()
-            else:
-                self.driver.find_element_by_css_selector("#yt1").click()
+            self.driver.find_element_by_css_selector("#yt2").click()
 
         def get_element_by_label_text(self, label_text):
             element = self.driver.find_element_by_xpath("//label[normalize-space(text()) = '%s']" % label_text)

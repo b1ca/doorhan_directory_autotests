@@ -161,18 +161,11 @@ class ConstructorElement(BasePage):
 
         def add_element(self, element_params, element_name="", selector="a[href*='add']"):
             self.driver.find_element_by_css_selector(selector).click()
-            self.driver.find_element_by_css_selector('a[onclick*="$(\"#dictionary-nomenclature\").dialog(\"open\")"]')
-            # self.driver.execute_script("$('#dictionary-nomenclature').dialog('open'); return false;")
+            self.driver.execute_script(
+                "nomenclature.arr['additional'] = 0; $('#dictionary-nomenclature').dialog('open'); return false;")
             element_text = self.choose_random_element_from_dict()
             self.update_element_params(element_params)
             return element_text
-
-        #TODO remove?
-        # def change_element_params(self, element_to_change, element_params):
-        #     self.driver.find_elements_by_css_selector("a.update")[element_to_change].click()
-        #     old_color = self.get_element_color()
-        #     self.update_element_params(element_params)
-        #     return old_color
 
         def get_element_color(self):
             return self.driver.find_element_by_css_selector("#NomenclatureGroupElementsModel_color_val").text
@@ -194,15 +187,6 @@ class ConstructorElement(BasePage):
             rand_element.click()
             self.wait_until_jquery(5)
             return element_text
-
-        #TODO remove?
-        # def element_has_params(self, element_number, element_params):
-        #     import time
-        #     time.sleep(3)
-        #     self.driver.find_elements_by_css_selector("a.update")[element_number].click()
-        #     if element_params["color"]:
-        #         color_field = self.driver.find_element_by_css_selector("#NomenclatureGroupElementsModel_color_val")
-        #         return element_params["color"].lower() in color_field.get_attribute("value").lower()
 
         def have_element(self, element_text, num_of_elements):
             import time
@@ -468,7 +452,6 @@ class Shield(ConstructorElement):
             self.driver.find_element_by_xpath("//a[text()='"+shield_name+"']/..//a[@class='shield-group-action edit']")\
                 .click()
             result = all(self.check_params_on_page(param) for param in params_list)
-            # self.driver.back()
             self.driver.find_element_by_css_selector(".btn-white a").click()
             return result
 
@@ -638,7 +621,6 @@ class Driver(ConstructorElement):
         def have_subdriver(self):
             subel_text = self.driver.find_elements_by_css_selector("tbody td:nth-of-type(3)")[0].text
             self.driver.find_element_by_css_selector("a[href*='/driver/']").click()
-            # self.driver.find_element_by_css_selector("div.btn.btn-white").click()
             return self.subelement_text == subel_text
 
         def to_update_driver(self):

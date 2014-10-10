@@ -675,7 +675,7 @@ class NomenclatureAdditional(ConstructorElement):
             self.save_element()
 
         def save_element(self):
-            self.driver.find_element_by_css_selector("#yt2").click()
+            self.driver.find_element_by_css_selector("#yt1").click()
 
         def get_element_by_label_text(self, label_text):
             element = self.driver.find_element_by_xpath("//label[normalize-space(text()) = '%s']" % label_text)

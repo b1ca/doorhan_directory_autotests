@@ -1,28 +1,23 @@
 #coding=utf-8
 from __future__ import unicode_literals
-import pages
-import basetest
-import random
+
+from basetest import BaseTest
+from pages.main_page import MainPage
 
 
-class TestDirShields(basetest.BaseTest):
+class TestsShields(BaseTest):
 
-    def add_group_shield(self, params_list, add_new_product=0):
-        main_page = pages.MainPage(self.driver)
+    def setUp(self):
+        BaseTest.setUp(self)
+        main_page = MainPage(self.driver)
         constructor_page = main_page.navigate_cp()
-        shield = constructor_page.navigate_shield()
-        shield_name = "test_QWERT_" + str(random.randrange(0, 150))
-        shield.add_group(shield_name, params_list, add_new_product)
-        self.assertTrue(shield.have_item(shield_name))
-        self.assertTrue(shield.group_have_params(shield_name, params_list))
-        shield.delete_group(shield_name)
-        self.assertFalse(shield.have_item(shield_name))
+        self.item = constructor_page.navigate_shield()
 
     def test01_add_group_shield(self):
+        shield = self.item
         params_list = [
             ["checkbox", ["Возможно установить калитку"]],
             ["checkbox", ["Возможно установить окна"]],
-            ["checkbox", ["Участвует в расчете веса щита"]],
             ["option", ["Ориентация панели", "Горизонтальная"]],
             ["fx", ["Верхний допуск на размер щита", "12"]],
             ["fx", ["Нижний допуск на размер щита", "3"]],
@@ -36,8 +31,7 @@ class TestDirShields(basetest.BaseTest):
             ["fx", ["Уменьшение при срезе верхней", "5"]],
             ["fx", ["Уменьшение при срезе нижней", "0"]],
             ["fx", ["Упаковочное место", "0"]],
-            ["fx", ["Не резать по усилению разрешено", "1"]],
-            ["fx", ["Не резать по усилению по умолчанию", "1"]],
+            ["fx", ["Не резать по усилению", "1"]],
             ["fx", ["Только один типоразмер разрешен", "1"]],
             ["fx", ["Автонадставка профилем разрешена", "1", 0]],
             ["fx", ["Автонадставка профилем разрешена", "1", 1]],
@@ -45,11 +39,15 @@ class TestDirShields(basetest.BaseTest):
             ["fx", ["Число вариантов автонадставки", "2"]],
             ["fx", ["Варианты автонадставки", "1"]],
         ]
-        self.add_group_shield(params_list)
+        shield.add_group(shield.item_name, params_list, add_new_product=0)
+        self.assertTrue(shield.have_item(shield.item_name))
+        self.assertTrue(shield.group_have_params(shield.item_name, params_list))
+        shield.delete_group(shield.item_name)
+        self.assertFalse(shield.have_item(shield.item_name))
 
     def test02_add_group_shield(self):
+        shield = self.item
         params_list = [
-            ["checkbox", ["Участвует в расчете веса щита"]],
             ["option", ["Ориентация панели", "Вертикальная"]],
             ["fx", ["Верхний допуск на размер щита", "30"]],
             ["fx", ["Нижний допуск на размер щита", "2"]],
@@ -63,8 +61,7 @@ class TestDirShields(basetest.BaseTest):
             ["fx", ["Уменьшение при срезе верхней", "3"]],
             ["fx", ["Уменьшение при срезе нижней", "0"]],
             ["fx", ["Упаковочное место", "0"]],
-            ["fx", ["Не резать по усилению разрешено", "0"]],
-            ["fx", ["Не резать по усилению по умолчанию", "0"]],
+            ["fx", ["Не резать по усилению", "0"]],
             ["fx", ["Только один типоразмер разрешен", "0"]],
             ["fx", ["Автонадставка профилем разрешена", "0", 0]],
             ["fx", ["Автонадставка профилем разрешена", "1", 1]],
@@ -72,21 +69,14 @@ class TestDirShields(basetest.BaseTest):
             ["fx", ["Число вариантов автонадставки", "2"]],
             ["fx", ["Варианты автонадставки", "1"]],
         ]
-        self.add_group_shield(params_list, add_new_product=1)
-
-    def add_shield(self, params_list):
-        main_page = pages.MainPage(self.driver)
-        constructor_page = main_page.navigate_cp()
-        shield = constructor_page.navigate_shield()
-        group_name = params_list[0][1][1]
-        shield.add_shield(params_list)
-        shield.choose_group(group_name)
-        shield.choose_nth_item(0)
-        self.assertTrue(shield.shield_has_params(params_list))
-        shield.choose_group(group_name)
-        shield.delete_added_element()
+        shield.add_group(shield.item_name, params_list, add_new_product=0)
+        self.assertTrue(shield.have_item(shield.item_name))
+        self.assertTrue(shield.group_have_params(shield.item_name, params_list))
+        shield.delete_group(shield.item_name)
+        self.assertFalse(shield.have_item(shield.item_name))
 
     def test03_add_shield(self):
+        shield = self.item
         params_list = [
             ["option", ["Создать щит на базе группы", "Без защиты от защемления пальцев 475+500+525+550+575 RSD02"]],
             ["option", ["Тип панели", "Без защиты от защемления"]],
@@ -101,9 +91,10 @@ class TestDirShields(basetest.BaseTest):
             ["fx", ["Только один типоразмер разрешен:", "1"]],
             ["version", ["Внутренняя"]],
         ]
-        self.add_shield(params_list)
+        shield._add_shield(params_list)
 
     def test04_add_shield(self):
+        shield = self.item
         params_list = [
             ["option", ["Создать щит на базе группы", "Панели с алюминиевой облицовкой RSD02"]],
             ["option", ["Тип панели", "С защитой от защемления"]],
@@ -118,9 +109,10 @@ class TestDirShields(basetest.BaseTest):
             ["fx", ["Только один типоразмер разрешен:", "1"]],
             ["version", ["Дилерская"]],
         ]
-        self.add_shield(params_list)
+        shield._add_shield(params_list)
 
     def test05_add_shield(self):
+        shield = self.item
         params_list = [
             ["option", ["Создать щит на базе группы", "Панели с алюминиевой облицовкой 2010 RSD02"]],
             ["option", ["Тип панели", "С защитой от защемления"]],
@@ -139,4 +131,4 @@ class TestDirShields(basetest.BaseTest):
             ["option", ["Высота квадрата филенки", "340"]],
             ["region", ["СНГ"]],
         ]
-        self.add_shield(params_list)
+        shield._add_shield(params_list)

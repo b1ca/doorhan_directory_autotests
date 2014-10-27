@@ -1,34 +1,23 @@
 #coding=utf-8
 from __future__ import unicode_literals
-import pages
-import basetest
-import random
+
+from basetest import BaseTest
+from pages.main_page import MainPage
 
 
-class TestDirEmbObjects(basetest.BaseTest):
+class TestsEmbedded(BaseTest):
 
-    def add_embedded_element(self, embedded_type, params_list):
-        main_page = pages.MainPage(self.driver)
+    def setUp(self):
+        BaseTest.setUp(self)
+        main_page = MainPage(self.driver)
         constructor_page = main_page.navigate_cp()
-        embedded = constructor_page.navigate_embedded()
-        embedded_name = params_list[0][1][1]
-        if embedded_type == "kalitka":
-            embedded.choose_kalitka_type()
-        elif embedded_type == "window":
-            embedded.choose_window_type()
-        element_number = embedded.get_number_of_elements()
-        element_text = embedded.add_embedded_element(embedded_name, params_list)
-        print element_text
-        self.assertTrue(embedded.have_element(element_text, element_number))
-        embedded.choose_nth_item(0)
-        self.assertTrue(embedded.embedded_has_params(params_list))
-        embedded.delete_added_element()
-        self.assertFalse(embedded.have_element(element_text, element_number))
+        self.item = constructor_page.navigate_embedded()
 
     def test01_add_kalitka_element(self):
-        embedded_name = "test_QWERT_" + str(random.randrange(0, 150))
+        embedded = self.item
+        embedded.embedded_type = 'kalitka'
         params_list = [
-            ["input", ["Название", embedded_name]],
+            ["input", ["Название", embedded.embedded_name]],
             ["fx", ["Минимальная ширина", "0"]],
             ["fx", ["Ширина по умолчанию", "5"]],
             ["fx", ["Максимальная ширина", "50"]],
@@ -44,12 +33,18 @@ class TestDirEmbObjects(basetest.BaseTest):
             ["radio", ["Выдать доводчик открытой калитки", "нет"]],
             ["radio", ["Выдавать глазок", "да"]],
         ]
-        self.add_embedded_element("kalitka", params_list)
+        embedded.add_element(params_list)
+        self.assertTrue(embedded.have_element())
+        embedded.to_update_element()
+        self.assertTrue(embedded.element_have_params(params_list))
+        embedded.delete_element()
+        self.assertFalse(embedded.have_element())
 
     def test02_add_kalitka_element(self):
-        embedded_name = "test_QWERT_" + str(random.randrange(0, 150))
+        embedded = self.item
+        embedded.embedded_type = 'kalitka'
         params_list = [
-            ["input", ["Название", embedded_name]],
+            ["input", ["Название", embedded.embedded_name]],
             ["fx", ["Минимальная ширина", "1"]],
             ["fx", ["Ширина по умолчанию", "3"]],
             ["fx", ["Максимальная ширина", "20"]],
@@ -65,12 +60,18 @@ class TestDirEmbObjects(basetest.BaseTest):
             ["radio", ["Выдать доводчик открытой калитки", "нет"]],
             ["radio", ["Выдавать глазок", "нет"]],
         ]
-        self.add_embedded_element("kalitka", params_list)
+        embedded.add_element(params_list)
+        self.assertTrue(embedded.have_element())
+        embedded.to_update_element()
+        self.assertTrue(embedded.element_have_params(params_list))
+        embedded.delete_element()
+        self.assertFalse(embedded.have_element())
 
     def test03_add_kalitka_element(self):
-        embedded_name = "test_QWERT_" + str(random.randrange(0, 150))
+        embedded = self.item
+        embedded.embedded_type = 'kalitka'
         params_list = [
-            ["input", ["Название", embedded_name]],
+            ["input", ["Название", embedded.embedded_name]],
             ["fx", ["Минимальная ширина", "0"]],
             ["fx", ["Ширина по умолчанию", "5"]],
             ["fx", ["Максимальная ширина", "50"]],
@@ -94,12 +95,18 @@ class TestDirEmbObjects(basetest.BaseTest):
             ["radio", ["Выдать доводчик открытой калитки", "нет"]],
             ["radio", ["Выдавать глазок", "да"]],
         ]
-        self.add_embedded_element("kalitka", params_list)
+        embedded.add_element(params_list)
+        self.assertTrue(embedded.have_element())
+        embedded.to_update_element()
+        self.assertTrue(embedded.element_have_params(params_list))
+        embedded.delete_element()
+        self.assertFalse(embedded.have_element())
 
     def test04_add_window_element(self):
-        embedded_name = "test_QWERT_" + str(random.randrange(0, 150))
+        embedded = self.item
+        embedded.embedded_type = 'window'
         params_list = [
-            ["input", ["Название", embedded_name]],
+            ["input", ["Название", embedded.embedded_name]],
             ["checkbox", ["Круглое"]],
             ["input", ["Радиус", "10"]],
             ["input", ["Артикул", "8"]],
@@ -115,12 +122,18 @@ class TestDirEmbObjects(basetest.BaseTest):
             ["fx", ["Справа", "5"]],
             ["fx", ["Снизу", "5"]],
         ]
-        self.add_embedded_element("window", params_list)
+        embedded.add_element(params_list)
+        self.assertTrue(embedded.have_element())
+        embedded.to_update_element()
+        self.assertTrue(embedded.element_have_params(params_list))
+        embedded.delete_element()
+        self.assertFalse(embedded.have_element())
 
     def test05_add_window_element(self):
-        embedded_name = "test_QWERT_" + str(random.randrange(0, 150))
+        embedded = self.item
+        embedded.embedded_type = 'window'
         params_list = [
-            ["input", ["Название", embedded_name]],
+            ["input", ["Название", embedded.embedded_name]],
             ["checkbox", ["Круглое"]],
             ["input", ["Радиус", "25"]],
             ["input", ["Артикул", "10"]],
@@ -136,15 +149,18 @@ class TestDirEmbObjects(basetest.BaseTest):
             ["fx", ["Справа", "3"]],
             ["fx", ["Снизу", "4"]],
         ]
-        self.add_embedded_element("window", params_list)
+        embedded.add_element(params_list)
+        self.assertTrue(embedded.have_element())
+        embedded.to_update_element()
+        self.assertTrue(embedded.element_have_params(params_list))
+        embedded.delete_element()
+        self.assertFalse(embedded.have_element())
 
     def test06_change_kalitka_element(self):
-        main_page = pages.MainPage(self.driver)
-        constructor_page = main_page.navigate_cp()
-        embedded = constructor_page.navigate_embedded()
-        embedded_name = "test_QWERT_" + str(random.randrange(0, 150))
+        embedded = self.item
+        embedded.embedded_type = 'kalitka'
         params_list = [
-            ["input", ["Название", embedded_name]],
+            ["input", ["Название", embedded.embedded_name]],
             ["fx", ["Минимальная ширина", "1"]],
             ["fx", ["Ширина по умолчанию", "3"]],
             ["fx", ["Максимальная ширина", "20"]],
@@ -160,30 +176,27 @@ class TestDirEmbObjects(basetest.BaseTest):
             ["radio", ["Выдать доводчик открытой калитки", "нет"]],
             ["radio", ["Выдавать глазок", "нет"]],
         ]
-        embedded.choose_kalitka_type()
-        element_number = embedded.get_number_of_elements()
-        element_text = embedded.add_embedded_element(embedded_name, params_list)
-        self.assertTrue(embedded.have_element(element_text, element_number))
-        embedded.choose_nth_item(0)
+        embedded.add_element(params_list)
+        self.assertTrue(embedded.have_element())
+        embedded.to_update_element()
         new_params_list = [
             ["fx", ["Слева", "10"]],
             ["fx", ["Сверху", "15"]],
             ["fx", ["Справа", "20"]],
             ["fx", ["Снизу", "25"]],
         ]
-        embedded.update_element_params(new_params_list)
-        embedded.choose_nth_item(0)
-        self.assertTrue(embedded.embedded_has_params(new_params_list))
-        embedded.delete_added_element()
-        self.assertFalse(embedded.have_element(element_text, element_number))
+        embedded.update_element_params_without_information(new_params_list)
+        self.assertTrue(embedded.have_element())
+        embedded.to_update_element()
+        self.assertTrue(embedded.element_have_params(new_params_list))
+        embedded.delete_element()
+        self.assertFalse(embedded.have_element())
 
     def test07_change_window_element(self):
-        main_page = pages.MainPage(self.driver)
-        constructor_page = main_page.navigate_cp()
-        embedded = constructor_page.navigate_embedded()
-        embedded_name = "test_QWERT_" + str(random.randrange(0, 150))
+        embedded = self.item
+        embedded.embedded_type = 'window'
         params_list = [
-            ["input", ["Название", embedded_name]],
+            ["input", ["Название", embedded.embedded_name]],
             ["checkbox", ["Круглое"]],
             ["input", ["Радиус", "25"]],
             ["input", ["Артикул", "10"]],
@@ -199,19 +212,18 @@ class TestDirEmbObjects(basetest.BaseTest):
             ["fx", ["Справа", "3"]],
             ["fx", ["Снизу", "4"]],
         ]
-        embedded.choose_window_type()
-        element_number = embedded.get_number_of_elements()
-        element_text = embedded.add_embedded_element(embedded_name, params_list)
-        self.assertTrue(embedded.have_element(element_text, element_number))
-        embedded.choose_nth_item(0)
+        embedded.add_element(params_list)
+        self.assertTrue(embedded.have_element())
+        embedded.to_update_element()
         new_params_list = [
             ["input", ["Название", "TEMP_NAME"]],
             ["input", ["Радиус", "30"]],
             ["input", ["Артикул", "30"]],
             ["input", ["Вес", "30"]],
         ]
-        embedded.update_element_params(new_params_list)
-        embedded.choose_nth_item(0)
-        self.assertTrue(embedded.embedded_has_params(new_params_list))
-        embedded.delete_added_element()
-        self.assertFalse(embedded.have_element(element_text, element_number))
+        embedded.update_element_params_without_information(new_params_list)
+        self.assertTrue(embedded.have_element())
+        embedded.to_update_element()
+        self.assertTrue(embedded.element_have_params(new_params_list))
+        embedded.delete_element()
+        self.assertFalse(embedded.have_element())

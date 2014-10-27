@@ -1,25 +1,21 @@
 #coding=utf-8
 from __future__ import unicode_literals
-import pages
-import basetest
 import random
 
+from basetest import BaseTest
+from pages.main_page import MainPage
 
-class TestDirShields2(basetest.BaseTest):
 
-    def add_shield(self, params_list):  # copied from test_dir_shields
-        main_page = pages.MainPage(self.driver)
+class TestsShields2(BaseTest):
+
+    def setUp(self):
+        BaseTest.setUp(self)
+        main_page = MainPage(self.driver)
         constructor_page = main_page.navigate_cp()
-        shield = constructor_page.navigate_shield()
-        group_name = params_list[0][1][1]
-        shield.add_shield(params_list)
-        shield.choose_group(group_name)
-        shield.choose_nth_item(0)
-        self.assertTrue(shield.shield_has_params(params_list))
-        shield.choose_group(group_name)
-        shield.delete_added_element()
+        self.item = constructor_page.navigate_shield()
 
     def test06_add_shield(self):
+        shield = self.item
         params_list = [
             ["option", ["Создать щит на базе группы", "С защитой от защемления пальцев 500+610 RSD02"]],
             ["option", ["Тип панели", "С защитой от защемления"]],
@@ -39,17 +35,14 @@ class TestDirShields2(basetest.BaseTest):
             ["option", ["Высота квадрата филенки", "300"]],
             ["region", ["Европа"]],
         ]
-        self.add_shield(params_list)
+        shield._add_shield(params_list)
 
     def test07_change_group(self):
-        main_page = pages.MainPage(self.driver)
-        constructor_page = main_page.navigate_cp()
-        shield = constructor_page.navigate_shield()
+        shield = self.item
         shield_name = "test_QWERT_" + str(random.randrange(0, 150))
         params_list = [
             ["checkbox", ["Возможно установить калитку"]],
             ["checkbox", ["Возможно установить окна"]],
-            ["checkbox", ["Участвует в расчете веса щита"]],
             ["option", ["Ориентация панели", "Горизонтальная"]],
             ["fx", ["Верхний допуск на размер щита", "12"]],
             ["fx", ["Нижний допуск на размер щита", "3"]],
@@ -63,8 +56,7 @@ class TestDirShields2(basetest.BaseTest):
             ["fx", ["Уменьшение при срезе верхней", "5"]],
             ["fx", ["Уменьшение при срезе нижней", "0"]],
             ["fx", ["Упаковочное место", "0"]],
-            ["fx", ["Не резать по усилению разрешено", "1"]],
-            ["fx", ["Не резать по усилению по умолчанию", "1"]],
+            ["fx", ["Не резать по усилению", "1"]],
             ["fx", ["Только один типоразмер разрешен", "1"]],
             ["fx", ["Автонадставка профилем разрешена", "1", 0]],
             ["fx", ["Автонадставка профилем разрешена", "1", 1]],
@@ -85,9 +77,7 @@ class TestDirShields2(basetest.BaseTest):
         self.assertFalse(shield.have_item(shield_name))
 
     def test08_change_shield(self):
-        main_page = pages.MainPage(self.driver)
-        constructor_page = main_page.navigate_cp()
-        shield = constructor_page.navigate_shield()
+        shield = self.item
         params_list = [
             ["option", ["Создать щит на базе группы", "Без защиты от защемления пальцев 475+500+525+550+575 RSD02"]],
             ["option", ["Тип панели", "Без защиты от защемления"]],

@@ -9,9 +9,10 @@ class DriverSet(SimpleItem):
 
     item_type = "driverSet"
     element_text = None
+    product_mark = "DriverSetProduct"
 
     def _update_element_params(self, params_list):
-        self.add_info_about_element("DriverSetProduct")
+        self.add_product()
         self.update_element_params_without_information(params_list)
 
     def update_element_params_without_information(self, params_list):

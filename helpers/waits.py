@@ -14,13 +14,12 @@ def wait_until_jquery_is_ready(self, seconds_to_wait):
 
 
 def wait_until_ui_dialog(self, seconds_to_wait):
-    WebDriverWait(self.driver, seconds_to_wait).\
-        until(ec.invisibility_of_element_located((By.CSS_SELECTOR, ".ui-dialog")))
+    WebDriverWait(self.driver, seconds_to_wait).until(
+        ec.invisibility_of_element_located((By.CSS_SELECTOR, ".ui-dialog")))
 
 
 def wait_until_title_is_equal(self, seconds_to_wait, title):
-    WebDriverWait(self.driver, seconds_to_wait).\
-        until(ec.title_is(title))
+    WebDriverWait(self.driver, seconds_to_wait).until(ec.title_is(title))
 
 
 def wait_until_text_present(self, seconds_to_wait, locator, text):

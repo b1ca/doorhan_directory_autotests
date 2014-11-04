@@ -1,6 +1,6 @@
 # coding=utf-8
 from __future__ import unicode_literals
-from waits import *
+from waits import wait_until_jquery
 import random
 
 

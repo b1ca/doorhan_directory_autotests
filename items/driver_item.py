@@ -12,13 +12,15 @@ class Driver(SimpleItem):
     driver_type = None
     element_text = None
     additional_element_text = None
+    product_mark = "NomenclatureDriverElementsProducts"
+    additional_product_mark = "NomenclatureDriverAdditionalElementsProducts"
 
     def add_driver(self, additional_element_params_list, driver_type):
         self.driver_type = driver_type
         self.add_element(additional_element_params_list)
 
     def _update_element_params(self, params_list):
-        self.add_info_about_element("NomenclatureDriverElementsProducts")
+        self.add_product(self.product_mark)
         self.choose_driver_type()
 
         self.add_additional_element(params_list)
@@ -32,13 +34,13 @@ class Driver(SimpleItem):
             wait_until_jquery(self, 5)
             self.driver.find_element_by_css_selector("a[onclick*='#dictionary-nomenclature']").click()
             self.additional_element_text = choose_random_element_from_dict(self)
-            self.add_info_about_additional_element()
+            self.add_product_for_additional_element()
             for param in params_list:
                     self.do_action(param)
             self.driver.find_element_by_css_selector("#submitButtonDriverSet").click()
 
-    def add_info_about_additional_element(self):
-        self.add_info_about_element("NomenclatureDriverAdditionalElementsProducts")
+    def add_product_for_additional_element(self):
+        self.add_product()
 
     def choose_driver_type(self, driver_type=''):
         xpath_select_with_id = "//select[@id='NomenclatureDriverElementsModel_type_id']"

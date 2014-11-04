@@ -9,13 +9,18 @@ class Service(SimpleItem):
 
     item_type = "service"
     element_text = None
+    product_mark = "ServiceProduct"
+    element_params = None
 
     def _update_element_params(self, params_list):
-        self.add_info_about_element("ServiceProduct")
+        self.add_product()
         self.update_element_params_without_information(params_list)
 
     def update_element_params_without_information(self, params_list):
         for param in params_list:
             self.do_action(param)
-        self.driver.find_element_by_css_selector("#yt1").click()
+        self.save_element()
         wait_until_jquery(self, 5)
+
+    def save_element(self):
+        self.driver.find_element_by_xpath("//a[@id='yt1'] | //a[@id='yt2']").click()

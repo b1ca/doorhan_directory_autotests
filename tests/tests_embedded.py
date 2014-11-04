@@ -227,3 +227,109 @@ class TestsEmbedded(BaseTest):
         self.assertTrue(embedded.element_have_params(new_params_list))
         embedded.delete_element()
         self.assertFalse(embedded.have_element())
+
+    def _add_simple_embedded_with_2_products(self, embedded, embedded_type, params_list, product_params):
+        embedded.embedded_type = embedded_type
+        embedded.add_element(params_list)
+        self.assertTrue(embedded.have_element())
+        embedded.to_update_element()
+        embedded.add_second_product(product_params)
+        embedded._element_have_params(params_list)
+        embedded.save_element()
+        return embedded
+
+    def test08_kalitka_add_second_product(self):
+        embedded = self.item
+        embedded_type = 'kalitka'
+        params_list = [
+            ["input", ["Название", embedded.embedded_name]],
+        ]
+        product_params = (1, 'RSD 01', ('Цех', 'Кладовщик', 'Мастер'))
+        embedded = self._add_simple_embedded_with_2_products(embedded, embedded_type, params_list, product_params)
+        embedded.to_update_element()
+        self.assertTrue(embedded.element_have_product(product_params))
+        self.assertTrue(embedded.element_have_params(params_list))
+        embedded.delete_element()
+        self.assertFalse(embedded.have_element())
+
+    def test09_kalitka_add_update_product(self):
+        embedded = self.item
+        embedded_type = 'kalitka'
+        params_list = [
+            ["input", ["Название", embedded.embedded_name]],
+        ]
+        product_params = (1, 'RSD 01', ('Цех', 'Кладовщик', 'Мастер'))
+        embedded = self._add_simple_embedded_with_2_products(embedded, embedded_type, params_list, product_params)
+        embedded.to_update_element()
+        new_product_params = (1, 'Все изделия', ('Цех', 'Кладовщик'))
+        embedded.update_product(new_product_params)
+        embedded.save_element()
+        embedded.to_update_element()
+        self.assertTrue(embedded.element_have_product(new_product_params))
+        self.assertTrue(embedded.element_have_params(params_list))
+        embedded.delete_element()
+        self.assertFalse(embedded.have_element())
+
+    def test10_kalitka_add_delete_product(self):
+        embedded = self.item
+        embedded_type = 'kalitka'
+        params_list = [
+            ["input", ["Название", embedded.embedded_name]],
+        ]
+        product_params = (1, 'RSD 01', ('Цех', 'Кладовщик', 'Мастер'))
+        embedded = self._add_simple_embedded_with_2_products(embedded, embedded_type, params_list, product_params)
+        embedded.to_update_element()
+        embedded.delete_second_product()
+        embedded.to_update_element()
+        self.assertFalse(embedded.element_have_product(product_params))
+        self.assertTrue(embedded.element_have_params(params_list))
+        embedded.delete_element()
+        self.assertFalse(embedded.have_element())
+
+    def test11_window_add_second_product(self):
+        embedded = self.item
+        embedded_type = 'window'
+        params_list = [
+            ["input", ["Название", embedded.embedded_name]],
+        ]
+        product_params = (1, 'RSD 01', ('Цех', 'Кладовщик', 'Мастер'))
+        embedded = self._add_simple_embedded_with_2_products(embedded, embedded_type, params_list, product_params)
+        embedded.to_update_element()
+        self.assertTrue(embedded.element_have_product(product_params))
+        self.assertTrue(embedded.element_have_params(params_list))
+        embedded.delete_element()
+        self.assertFalse(embedded.have_element())
+
+    def test12_window_add_update_product(self):
+        embedded = self.item
+        embedded_type = 'window'
+        params_list = [
+            ["input", ["Название", embedded.embedded_name]],
+        ]
+        product_params = (1, 'RSD 01', ('Цех', 'Кладовщик', 'Мастер'))
+        embedded = self._add_simple_embedded_with_2_products(embedded, embedded_type, params_list, product_params)
+        embedded.to_update_element()
+        new_product_params = (1, 'Все изделия', ('Цех', 'Кладовщик'))
+        embedded.update_product(new_product_params)
+        embedded.save_element()
+        embedded.to_update_element()
+        self.assertTrue(embedded.element_have_product(new_product_params))
+        self.assertTrue(embedded.element_have_params(params_list))
+        embedded.delete_element()
+        self.assertFalse(embedded.have_element())
+
+    def test13_window_add_delete_product(self):
+        embedded = self.item
+        embedded_type = 'window'
+        params_list = [
+            ["input", ["Название", embedded.embedded_name]],
+        ]
+        product_params = (1, 'RSD 01', ('Цех', 'Кладовщик', 'Мастер'))
+        embedded = self._add_simple_embedded_with_2_products(embedded, embedded_type, params_list, product_params)
+        embedded.to_update_element()
+        embedded.delete_second_product()
+        embedded.to_update_element()
+        self.assertFalse(embedded.element_have_product(product_params))
+        self.assertTrue(embedded.element_have_params(params_list))
+        embedded.delete_element()
+        self.assertFalse(embedded.have_element())

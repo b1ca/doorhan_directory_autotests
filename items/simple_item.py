@@ -10,7 +10,8 @@ from helpers.nomenclature_dialog import choose_random_element_from_dict
 
 class SimpleItem(object):
     """
-    parent class for - driver, nomenclatureAdditional, nomenclatureAdditionalMaterial, driverSet, service, color
+    parent class for - embedded, driver, nomenclatureAdditional,
+    nomenclatureAdditionalMaterial, driverSet, service, color
     """
     def __init__(self, driver):
         self.driver = driver
@@ -20,6 +21,7 @@ class SimpleItem(object):
     element_text = None
     title_position = 4
     css_selector_for_add_element_btn = "a[href*='add']"
+    product_mark = None
 
     def add_element(self, element_params):
         self.driver.find_element_by_css_selector(self.css_selector_for_add_element_btn).click()
@@ -60,26 +62,26 @@ class SimpleItem(object):
                 "//label[normalize-space(text()) = '%s']/..//input[not(@type = 'hidden')]" % label_text)
             element_id = element.get_attribute("value")
             element.click()
-            self.driver.find_element_by_css_selector("input[name='ShieldModel[panelWeight]["+element_id+"]']")\
-                .send_keys(act[1][1])
-            self.driver.find_element_by_css_selector("input[data-id='"+element_id+"'][type='text']")\
-                .send_keys(act[1][2])
+            self.driver.find_element_by_css_selector(
+                "input[name='ShieldModel[panelWeight][%s]']" % element_id).send_keys(act[1][1])
+            self.driver.find_element_by_css_selector(
+                "input[data-id='%s'][type='text']" % element_id).send_keys(act[1][2])
             self.driver.find_elements_by_xpath("//ul[contains(@class, 'ui-autocomplete')]"
                                                "[contains(@style, 'display: block')]"
-                                               "//a[contains(text(),'"+act[1][2]+"')]")[0].click()
+                                               "//a[contains(text(),'%s')]" % act[1][2])[0].click()
         elif action == "radio":
-            element = self.driver.\
-                find_element_by_xpath("//label[text()='"+label_text+"']/..//label[text()='"+text_to_do+"']")
+            element = self.driver.find_element_by_xpath(
+                "//label[text()='%s']/..//label[text()='%s']" % (label_text, text_to_do))
             element_id = element.get_attribute("for")
             self.driver.find_element_by_id(element_id).click()
         elif action == "version":
             self.driver.find_element_by_xpath("//a[contains(text(), 'Версия')]").click()
-            for v in act[1]:
-                self.driver.find_element_by_xpath("//label[contains(text(), '"+v+"')]").click()
+            for version in act[1]:
+                self.driver.find_element_by_xpath("//label[contains(text(), '%s')]" % version).click()
         elif action == "region":
             self.driver.find_element_by_xpath("//a[contains(text(), 'Регион')]").click()
-            for v in act[1]:
-                self.driver.find_element_by_xpath("//span[text()='"+v+"']/../input").click()
+            for region in act[1]:
+                self.driver.find_element_by_xpath("//span[text()='%s']/../input" % region).click()
 
     def sendkeys_by_label_text(self, label_text, text_to_type):
         element = self.driver.find_element_by_xpath("//label[normalize-space(text()) = '%s']/../..//input" % label_text)
@@ -123,36 +125,32 @@ class SimpleItem(object):
             return get_elements_by_label_text(self, label_text)[num].get_attribute("value").strip() == text_to_do
         if action == "checkbox_weight_code":
             chkbox = self.driver.find_element_by_xpath(
-                "//label[normalize-space(text()) = '"+param[1][0]+"']/..//input[not(@type = 'hidden')]")
+                "//label[normalize-space(text()) = '%s']/..//input[not(@type = 'hidden')]" % param[1][0])
             element_id = chkbox.get_attribute("value")
-            weight_input_val = \
-                self.driver.find_element_by_css_selector("input[name='ShieldModel[panelWeight]["+element_id+"]']")\
-                    .get_attribute("value")
-            code_input_val = \
-                self.driver.find_element_by_css_selector("input[data-id='"+element_id+"'][type='text']")\
-                .get_attribute("value")
+            weight_input_val = self.driver.find_element_by_css_selector(
+                "input[name='ShieldModel[panelWeight][%s]']" % element_id).get_attribute("value")
+            code_input_val = self.driver.find_element_by_css_selector(
+                "input[data-id='%s'][type='text']" % element_id).get_attribute("value")
             result = chkbox.is_selected() and weight_input_val in param[1][1] and code_input_val in param[1][2]
             return result
         if action == "radio":
-            element = self.driver.\
-                find_element_by_xpath("//label[text()='"+label_text+"']/..//label[text()='"+text_to_do+"']")
+            element = self.driver.find_element_by_xpath(
+                "//label[text()='%s']/..//label[text()='%s']" % (label_text, text_to_do))
             element_id = element.get_attribute("for")
-            # res = self.driver.find_element_by_id(element_id).is_selected()
-            # print "radio = %s" % res
             return self.driver.find_element_by_id(element_id).is_selected()
         if action == "version":
             self.driver.find_element_by_xpath("//a[contains(text(), 'Версия')]").click()
             result = True
-            for v in param[1]:
-                el_id = self.driver.find_element_by_xpath("//label[contains(text(), '"+v+"')]").get_attribute("for")
-                result = result and self.driver.find_element_by_id(el_id)\
-                    .is_selected()
+            for version in param[1]:
+                el_id = self.driver.find_element_by_xpath(
+                    "//label[contains(text(), '%s')]" % version).get_attribute("for")
+                result = result and self.driver.find_element_by_id(el_id).is_selected()
             return result
         if action == "region":
             self.driver.find_element_by_xpath("//a[contains(text(), 'Регион')]").click()
             result = True
-            for v in param[1]:
-                el = self.driver.find_element_by_xpath("//span[text()='"+v+"']/../input")
+            for region in param[1]:
+                el = self.driver.find_element_by_xpath("//span[text()='%s']/../input" % region)
                 result = result and el.is_selected()
             return result
 
@@ -161,26 +159,85 @@ class SimpleItem(object):
         return self.element_text.strip() == element.text.strip()
 
     def element_have_params(self, element_params):
-        result = all(self.check_params_on_page(param) for param in element_params)
+        result = self._element_have_params(element_params)
         self.driver.find_element_by_css_selector(".btn-white a").click()
         return result
 
+    def _element_have_params(self, element_params):
+        return all(self.check_params_on_page(param) for param in element_params)
+
+    def save_element(self):
+        raise NotImplementedError
+
     def to_update_element(self):
+        wait_until_jquery(self, 10)
         self.driver.find_element_by_css_selector("a.update").click()
 
     def delete_element(self):
         self.driver.find_elements_by_css_selector("tbody input")[0].click()
         self.driver.find_element_by_css_selector("#listSubmit").click()
 
-    def add_info_about_element(self, mark):
-        self.driver.find_element_by_css_selector(".autocompleteProducts").click()
-        self.driver.find_element_by_css_selector(".autocompleteProducts").clear()
-        self.driver.find_element_by_css_selector(".autocompleteProducts").send_keys("RSD 02")
-        self.driver.find_element_by_xpath("//a[text()='RSD 02']").click()
+    def add_product(self, product_params=()):
+        product_count = 0
+        product_type = 'RSD 02'
+        checkbox_maps = ('Цех',)
+        if len(product_params) == 3:
+            product_count, product_type, checkbox_maps = product_params
+        product = self.driver.find_element_by_css_selector(".products[count='%s']" % str(product_count))
+        product_field = product.find_element_by_css_selector(".autocompleteProducts")
+        product_field.click()
+        product_field.clear()
+        product_field.send_keys(product_type)
+        product.find_element_by_xpath("//a[.='%s']" % product_type).click()
         time.sleep(2)
-        self.driver.find_elements_by_css_selector(
-            "#%sModel_0_specification_id option[value]" % mark)[0].click()
-        checkbox_text = 'Цех'
-        self.driver.find_element_by_css_selector('.ui-multiselect').click()
-        self.driver.find_element_by_xpath("//label/span[.='%s']/../input" % checkbox_text).click()
+        product.find_elements_by_css_selector(
+            "select[name*='%sModel[%s]'] option[value]" % (self.product_mark, product_count))[0].click()
+        product.find_element_by_css_selector('.ui-multiselect').click()
         time.sleep(1)
+        for_attr = ('Model_0_card_id', 'Model_0_card_id') if not product_count else (
+            'Model_card_id', 'Model_%s_card_id' % product_count)
+        for checkbox_text in checkbox_maps:
+            self.driver.find_element_by_xpath(
+                "//*[contains(@for, '%s')][.='%s']/input | //*[contains(@for, '%s')][.='%s']/input"
+                % (for_attr[0], checkbox_text, for_attr[1], checkbox_text)).click()
+
+    def update_product(self, new_product_params):
+        if not len(new_product_params) == 3:
+            raise Exception('product params must be tuple or list of 3 elements.')
+        self.add_product(new_product_params)
+
+    def element_have_product(self, product_params):
+        self.driver.implicitly_wait(2)
+        product_count, product_type, checkbox_maps = product_params
+        try:
+            products = self.driver.find_elements_by_css_selector(".products[count='%s']" % str(product_count))
+            product = products[0]
+            product_result = len(products) == 1
+            product_field_result = product.find_element_by_css_selector(
+                ".autocompleteProducts").get_attribute("value") == product_type
+            checkbox_maps_result = []
+            product.find_element_by_css_selector('.ui-multiselect').click()
+            for_attr = 'Model_%s_card_id' % product_count
+            for checkbox_text in checkbox_maps:
+                checkbox_maps_result.append(self.driver.find_element_by_xpath(
+                    "//*[contains(@for, '%s')][.='%s']/input" % (for_attr, checkbox_text)).is_selected())
+            checkbox_maps_result = all(checkbox_maps_result)
+            return all([product_result, product_field_result, checkbox_maps_result])
+        except IndexError, e:
+            print e.message
+            return False
+
+    def delete_product(self, product_count):
+        self.driver.find_element_by_css_selector(".products[count='%s'] [class*=deleteProduct]" % product_count).click()
+        wait_until_jquery(self, 5)
+
+    def add_second_product(self, product_params):
+        self.driver.find_element_by_css_selector('.new-delete #addInputAutoComplete').click()
+        self.add_product(product_params)
+
+    def update_second_product(self, products_params):
+        self.update_product(products_params)
+
+    def delete_second_product(self, product_count=1):
+        self.delete_product(product_count)
+        self.save_element()

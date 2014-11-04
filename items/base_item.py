@@ -46,7 +46,7 @@ class BaseItem(object):
         self.driver.find_elements_by_css_selector("a.delete")[0].click()
 
     def get_item_name_by_num(self, num_of_item):
-        return self.driver.find_elements_by_css_selector("span[class^="+self.item_type+"-title]")[num_of_item].text
+        return self.driver.find_elements_by_css_selector("span[class^=%s-title]" % self.item_type)[num_of_item].text
 
     def add_element(self, element_params, element_name="", selector="a[href*='add']"):
         self.driver.find_element_by_css_selector(selector).click()
@@ -65,7 +65,7 @@ class BaseItem(object):
         return el_0_text == element_text and len(el_list) == num_of_elements + 1
 
     def change_item_name(self, old_item_name, new_item_name):
-        self.driver.find_element_by_xpath("(//span[text()='"+old_item_name+"']/../..//a)[1]").click()
+        self.driver.find_element_by_xpath("(//span[text()='%s']/../..//a)[1]" % old_item_name).click()
         wait_until_jquery(self, 5)
         item_name_input = self.driver.find_element_by_css_selector("#NomenclatureGroupsModelEdit_title")
         item_name_input.clear()

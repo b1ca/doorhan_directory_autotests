@@ -40,6 +40,7 @@ class Driver(SimpleItem):
             self.driver.find_element_by_css_selector("#submitButtonDriverSet").click()
 
     def add_product_for_additional_element(self):
+        self.product_mark = self.additional_product_mark
         self.add_product()
 
     def choose_driver_type(self, driver_type=''):

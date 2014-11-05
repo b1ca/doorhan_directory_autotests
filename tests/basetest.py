@@ -3,12 +3,13 @@ from __future__ import unicode_literals
 import logging
 import sys
 import unittest
+import os
+from datetime import datetime
 
 from testconfig import config
 from selenium import webdriver
 from selenium.webdriver.remote.remote_connection import LOGGER
 
-from helpers.screenshooter import get_screenshot
 from pages.login_page import LoginPage
 
 
@@ -35,15 +36,34 @@ class BaseTest(unittest.TestCase):
 
     def tearDown(self):
         if sys.exc_info()[0]:
-            get_screenshot(self)
+            self.get_screenshot()
         if not 'debug' in config:
             self.driver.get(''.join([LoginPage.url, 'site/logout']))
-        # self.driver.get(''.join([LoginPage.url, 'site/logout']))
 
     @classmethod
     def tearDownClass(cls):
         if not 'debug' in config and cls.driver:
             cls.driver.quit()
+
+    def get_screenshot(self):
+        """
+        Save screenshot to test-results/method_name folder
+        """
+        method_name = self._testMethodName
+        class_name = type(self).__name__
+        time_now = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+        folder = os.path.dirname(os.getcwd())
+        directory = "".join([folder, "/test-results/", class_name])
+
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
+        file_name = "%s/%s - %s.png" % (directory, time_now, method_name)
+
+        self.driver.get_screenshot_as_file(file_name)
+        # for jenkins integration
+        print "[[ATTACHMENT|%s]]" % file_name
+        print "current url - %s" % self.driver.current_url
 
 if __name__ == '__main__':
     unittest.main()

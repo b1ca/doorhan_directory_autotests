@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 
 from simple_item import SimpleItem
 from helpers.waits import *
-from helpers.nomenclature_dialog import choose_random_element_from_dict
 
 
 class DriverSet(SimpleItem):

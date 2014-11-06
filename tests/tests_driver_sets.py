@@ -151,11 +151,60 @@ class TestsDriverSets(BaseTest):
         dr_set.delete_element()
         self.assertFalse(dr_set.have_element())
 
-    # def test08_update_dependent_element(self):
-    #     raise NotImplementedError
-    # 
-    # def test09_remove_dependent_element(self):
-    #     raise NotImplementedError
+    def test08_update_dependent_element(self):
+        params_list = [
+            ["version", ["Внутренняя"]],
+            ["region", ["СНГ"]],
+        ]
+        product_params = (1, 'RSD 01', ('Цех', 'Кладовщик', 'Мастер'))
+        dr_set = self._add_simple_driver_set_with_2_products(params_list, product_params)
+        dependent_element_params = [
+            ["fx", ["Количество", "1"]],
+            ["version", ["Дилерская"]],
+            ["region", ["Азия", "Европа"]],
+        ]
+        dr_set.to_update_element()
+        dr_set.add_dependent_element(1, dependent_element_params)
+        dr_set.save_element()
+        new_dependent_element_params = [
+            ["fx", ["Количество", "2"]],
+            ["version", ["Внутренняя"]],
+            ["region", ["СНГ"]],
+        ]
+        dr_set.to_update_element()
+        dr_set.to_update_dependent_element()
+        dr_set.update_dependent_element(new_dependent_element_params)
+        dr_set.save_element()
+        dr_set.to_update_element()
+        self.assertTrue(dr_set.element_have_product(product_params))
+        self.assertTrue(dr_set.element_have_dependent(new_dependent_element_params))
+        self.assertTrue(dr_set.element_have_params(params_list))
+        dr_set.delete_element()
+        self.assertFalse(dr_set.have_element())
+
+    def test09_remove_dependent_element(self):
+        params_list = [
+            ["version", ["Внутренняя"]],
+            ["region", ["СНГ"]],
+        ]
+        product_params = (1, 'RSD 01', ('Цех', 'Кладовщик', 'Мастер'))
+        dr_set = self._add_simple_driver_set_with_2_products(params_list, product_params)
+        dependent_element_params = [
+            ["fx", ["Количество", "1"]],
+            ["version", ["Дилерская"]],
+            ["region", ["Азия", "Европа"]],
+        ]
+        dr_set.to_update_element()
+        dr_set.add_dependent_element(0, dependent_element_params)
+        dr_set.save_element()
+        dr_set.to_update_element()
+        dr_set.delete_dependent_element()
+        dr_set.save_element()
+        dr_set.to_update_element()
+        self.assertFalse(dr_set.element_have_dependent(dependent_element_params))
+        self.assertTrue(dr_set.element_have_params(params_list))
+        dr_set.delete_element()
+        self.assertFalse(dr_set.have_element())
 
     def test10_remove_second_product(self):
         params_list = [

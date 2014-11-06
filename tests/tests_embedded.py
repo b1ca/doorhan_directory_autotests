@@ -252,7 +252,7 @@ class TestsEmbedded(BaseTest):
         embedded.delete_element()
         self.assertFalse(embedded.have_element())
 
-    def test09_kalitka_add_update_product(self):
+    def test09_kalitka_update_second_product(self):
         embedded = self.item
         embedded_type = 'kalitka'
         params_list = [
@@ -270,7 +270,7 @@ class TestsEmbedded(BaseTest):
         embedded.delete_element()
         self.assertFalse(embedded.have_element())
 
-    def test10_kalitka_add_delete_product(self):
+    def test10_kalitka_delete_second_product(self):
         embedded = self.item
         embedded_type = 'kalitka'
         params_list = [
@@ -300,7 +300,7 @@ class TestsEmbedded(BaseTest):
         embedded.delete_element()
         self.assertFalse(embedded.have_element())
 
-    def test12_window_add_update_product(self):
+    def test12_window_update_second_product(self):
         embedded = self.item
         embedded_type = 'window'
         params_list = [
@@ -318,7 +318,7 @@ class TestsEmbedded(BaseTest):
         embedded.delete_element()
         self.assertFalse(embedded.have_element())
 
-    def test13_window_add_delete_product(self):
+    def test13_window_delete_second_product(self):
         embedded = self.item
         embedded_type = 'window'
         params_list = [

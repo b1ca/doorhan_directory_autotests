@@ -66,3 +66,64 @@ class TestsDrivers(BaseTest):
         self.driver.find_element_by_css_selector("a[href*='/driver/']").click()
         dr.delete_element()
         self.assertFalse(dr.have_element())
+
+    def test05_add_second_product(self):
+        product_params = (1, 'RSD 01', ('Цех', 'Кладовщик', 'Мастер'))
+        dr = self.item
+        dr.add_driver([], driver_type="потолочный")
+        self.assertTrue(dr.have_element())
+        dr.to_update_element()
+        dr.add_second_product(product_params)
+        dr.save_element()
+        self.assertTrue(dr.have_element())
+        dr.to_update_element()
+        self.assertTrue(dr.element_have_product(product_params))
+        dr.save_element()
+        dr.delete_element()
+        self.assertFalse(dr.have_element())
+
+    def test06_update_product_in_dependent_element(self):
+        dr = self.item
+        additional_element_params_list = [
+            ["fx", ["Количество", "1"]],
+        ]
+        dr.add_driver(additional_element_params_list, driver_type="потолочный")
+        self.assertTrue(dr.have_element())
+        dr.to_update_element()
+        dr.to_update_dependent_element()
+        new_product_params = (0, 'Все изделия', ('Цех', 'Кладовщик'))
+        dr.update_product(new_product_params)
+        dr.save_dependent_element()
+        dr.save_element()
+        dr.to_update_element()
+        dr.to_update_dependent_element()
+        self.assertTrue(dr.element_have_product(new_product_params))
+        self.assertTrue(dr.element_have_params(additional_element_params_list))
+        dr.save_element()
+        dr.delete_element()
+        self.assertFalse(dr.have_element())
+
+    # def test07(self):
+    #     pass
+    #
+    # def test08(self):
+    #     pass
+    #
+    # def test09(self):
+    #     pass
+
+    def test10_remove_second_product(self):
+        product_params = (1, 'RSD 01', ('Цех', 'Кладовщик', 'Мастер'))
+        dr = self.item
+        dr.add_driver([], driver_type="потолочный")
+        self.assertTrue(dr.have_element())
+        dr.to_update_element()
+        dr.add_second_product(product_params)
+        dr.save_element()
+        self.assertTrue(dr.have_element())
+        dr.to_update_element()
+        dr.delete_product(1)
+        self.assertFalse(dr.element_have_product(product_params))
+        dr.save_element()
+        dr.delete_element()
+        self.assertFalse(dr.have_element())

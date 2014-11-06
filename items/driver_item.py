@@ -15,7 +15,7 @@ class Driver(SimpleItem):
     product_mark = "NomenclatureDriverElementsProducts"
     additional_product_mark = "NomenclatureDriverAdditionalElementsProducts"
 
-    def add_driver(self, additional_element_params_list, driver_type):
+    def add_driver(self, additional_element_params_list, driver_type=None):
         self.driver_type = driver_type
         self.add_element(additional_element_params_list)
 
@@ -64,3 +64,19 @@ class Driver(SimpleItem):
 
     def to_update_additional_element(self):
         self.driver.find_element_by_css_selector("a[title='Update']").click()
+
+    def add_second_product(self, product_params):
+        self.driver.find_element_by_css_selector("#addInputAutoComplete").click()
+        wait_until_jquery(self, 5)
+        self.add_product(product_params)
+
+    def save_element(self):
+        self.driver.find_element_by_css_selector('#submitButton').click()
+        wait_until_jquery(self, 5)
+
+    def save_dependent_element(self):
+        self.driver.find_element_by_css_selector('#submitButtonDriverSet').click()
+        wait_until_jquery(self, 5)
+
+    def to_update_dependent_element(self):
+        self.driver.find_element_by_css_selector("a img[src*='update.png']").click()

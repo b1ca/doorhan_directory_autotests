@@ -259,13 +259,8 @@ class SimpleItem(object):
     def element_have_dependent(self, dependent_element_params):
         table_with_dep_elements = self.driver.find_element_by_css_selector(
             ".products[count='%s']" % self.product_count).text
-        print 'dependent_element_text = %s' % self.dependent_element_text
-        print 'table_with_dep_elements = %s' % table_with_dep_elements
-        print 'product_count = %s' % self.product_count
         r0 = self.dependent_element_text in table_with_dep_elements
-        print 'r0 = %s' % r0
         if "Подчиненные элементы не добавлены" in table_with_dep_elements:
-            print 'false returner'
             return False
         else:
             self.to_update_dependent_element()

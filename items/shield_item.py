@@ -13,6 +13,7 @@ class Shield(BaseItem, SimpleItem):
 
     item_type = "shield"
     item_name = "test_QWERT_" + str(random.randrange(0, 150))
+    cover_name = "test_cover_" + str(random.randrange(0, 150))
 
     def add_group(self, shield_name, params_list, add_new_product=0):
         self.driver.find_element_by_css_selector("a[href$='addGroup']").click()
@@ -109,3 +110,37 @@ class Shield(BaseItem, SimpleItem):
         assert self.shield_has_params(params_list)
         self.choose_group(group_name)
         self.delete_added_element()
+
+    def choose_item_by_name(self, shield_name):
+        self.driver.find_element_by_xpath("//a[contains(@class, 'shield-group')][.='%s']" % shield_name).click()
+        wait_until_jquery(self, 10)
+
+    def add_cover_group(self, cover_params):
+        self.driver.find_element_by_css_selector("#add_cover_group").click()
+
+        self.update_cover_group_name(self.cover_name)
+        self.update_cover_group(cover_params)
+        self.save_cover_group()
+
+    def save_cover_group(self):
+        self.driver.find_element_by_css_selector("#yt0").click()
+        wait_until_jquery(self, 10)
+
+    def update_cover_group(self, cover_params):
+        for param in cover_params:
+            self.do_action(param)
+
+    def update_cover_group_name(self, cover_name):
+        cover_input = self.driver.find_element_by_css_selector("#ShieldCoverGroupModel_title")
+        cover_input.clear()
+        cover_input.send_keys(cover_name)
+
+    def have_cover(self, cover_name):
+        self.driver.implicitly_wait(2)
+        return len(self.driver.find_elements_by_xpath("//a[@class='cover-group'][.='%s']" % cover_name)) == 1
+
+    def remove_cover(self, cover_name):
+        self.driver.find_element_by_xpath(
+            "//a[@class='cover-group'][.='%s']/../../a[@class ='shield-group-action delete']" % cover_name).click()
+        self.driver.switch_to.alert.accept()
+        wait_until_jquery(self, 10)

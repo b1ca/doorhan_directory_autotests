@@ -5,6 +5,7 @@ import time
 
 from base_item import BaseItem
 from helpers.actions_by_label_text import get_elements_by_label_text
+from helpers.nomenclature_dialog import choose_random_element_from_dict
 from simple_item import SimpleItem
 from helpers.waits import *
 
@@ -14,6 +15,8 @@ class Shield(BaseItem, SimpleItem):
     item_type = "shield"
     item_name = "test_QWERT_" + str(random.randrange(0, 150))
     cover_name = "test_cover_" + str(random.randrange(0, 150))
+    group_name = 'RH58'
+    element_text = None
 
     def add_group(self, shield_name, params_list, add_new_product=0):
         self.driver.find_element_by_css_selector("a[href$='addGroup']").click()
@@ -115,6 +118,10 @@ class Shield(BaseItem, SimpleItem):
         self.driver.find_element_by_xpath("//a[contains(@class, 'shield-group')][.='%s']" % shield_name).click()
         wait_until_jquery(self, 10)
 
+    def choose_cover_group_by_name(self, cover_name):
+        self.driver.find_element_by_xpath("//a[contains(@class, 'cover-group')][.='%s']" % cover_name).click()
+        wait_until_jquery(self, 10)
+
     def add_cover_group(self, cover_params):
         self.driver.find_element_by_css_selector("#add_cover_group").click()
 
@@ -126,6 +133,10 @@ class Shield(BaseItem, SimpleItem):
         self.driver.find_element_by_css_selector("#yt0").click()
         wait_until_jquery(self, 10)
 
+    def to_update_cover_group(self):
+        self.driver.find_element_by_xpath(
+            "//a[@class='cover-group'][.='%s']/../../a[@class ='shield-group-action edit']" % self.cover_name).click()
+
     def update_cover_group(self, cover_params):
         for param in cover_params:
             self.do_action(param)
@@ -135,12 +146,73 @@ class Shield(BaseItem, SimpleItem):
         cover_input.clear()
         cover_input.send_keys(cover_name)
 
-    def have_cover(self, cover_name):
+    def have_cover_group(self, cover_name):
         self.driver.implicitly_wait(2)
         return len(self.driver.find_elements_by_xpath("//a[@class='cover-group'][.='%s']" % cover_name)) == 1
 
-    def remove_cover(self, cover_name):
+    def remove_cover_group(self, cover_name):
         self.driver.find_element_by_xpath(
             "//a[@class='cover-group'][.='%s']/../../a[@class ='shield-group-action delete']" % cover_name).click()
         self.driver.switch_to.alert.accept()
         wait_until_jquery(self, 10)
+
+    def add_cover(self, cover_params, as_group=False):
+        self.to_add_cover_page()
+        self.update_cover(cover_params, as_group)
+        self.add_product()
+        self.save_cover()
+
+    def to_add_cover_page(self):
+        self.driver.find_element_by_css_selector("#add_cover").click()
+
+    def update_cover(self, cover_params, as_group):
+        if as_group:
+            self.driver.find_element_by_css_selector("input[value='group']").click()
+            group_input = self.driver.find_element_by_css_selector("#autocompleteGroups")
+            group_input.click()
+            group_input.clear()
+            group_input.send_keys(self.group_name)
+            self.driver.find_element_by_xpath("//a[.='%s']" % self.group_name).click()
+            self.element_text = self.group_name
+        else:
+            self.driver.find_element_by_css_selector("a[onclick*='#dictionary-nomenclature']").click()
+            self.element_text = choose_random_element_from_dict(self)
+        for param in cover_params:
+            self.do_action(param)
+
+    def remove_cover(self):
+        self.driver.implicitly_wait(2)
+        self.driver.find_element_by_css_selector(".tbl a.delete").click()
+        alert = self.driver.switch_to_alert()
+        alert.accept()
+        wait_until_jquery(self, 10)
+
+    def to_update_cover(self):
+        self.driver.find_element_by_css_selector(".tbl a.update").click()
+
+    def save_cover(self):
+        self.driver.find_element_by_css_selector("#yt0").click()
+
+    def add_product(self, product_params=()):
+        product_type = 'RSD 02'
+        checkbox_maps = ('Цех',)
+        if len(product_params) == 3:
+            _, product_type, checkbox_maps = product_params
+        self.driver.find_element_by_xpath("//input[@id='ShieldCoverProductModel_product_id']/..//button").click()
+        self.driver.find_element_by_xpath("//label[.='%s']/input" % product_type).click()
+        time.sleep(2)
+        self.driver.find_elements_by_css_selector(
+            '#ShieldCoverProductModel_specification_id option:not([selected])')[0].click()
+        self.driver.find_elements_by_css_selector('.ui-multiselect')[-1].click()
+        time.sleep(1)
+        for checkbox_text in checkbox_maps:
+            self.driver.find_element_by_xpath("//label[.='%s']/input" % checkbox_text).click()
+
+    def update_product(self, new_product_params):
+        if not len(new_product_params) == 3:
+            raise Exception('product params must be tuple or list of 3 elements.')
+        self.add_product(new_product_params)
+
+    def have_cover(self):
+        el = self.driver.find_elements_by_xpath("//td[.='%s']" % self.element_text)
+        return len(el) == 1

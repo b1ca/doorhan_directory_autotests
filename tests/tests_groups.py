@@ -53,3 +53,101 @@ class TestsGroups(BaseTest):
         self.assertTrue(group.element_has_params(0, params_dict))
         params_dict["color"] = old_color
         group._update_element_params(params_dict)
+
+    def test06_add_dependent_element(self):
+        group = self.item
+        group_name = "test_QWERT_" + str(random.randrange(150, 300))
+        params_dict = {"color": "КОРИЧН. МУАР", "Версия": ["Внутренняя"], "Регион": []}
+        product_params = (0, 'RSD 02', ('Цех', 'Кладовщик', 'Мастер'))
+        dependent_element_params = [
+            ["fx", ["Количество", "1"]],
+            ["version", ["Дилерская"]]
+        ]
+        group.add_item(group_name)
+        group._add_element(params_dict)
+        group.add_dependent_element(0, dependent_element_params)
+        group.add_product(product_params)
+        group.save_dependent_element()
+        group.save_element()
+        self.assertTrue(group._have_item())
+        group.to_update_element()
+        self.assertTrue(group._have_dependent())
+        group.save_element()
+        group.delete_item(group_name)
+        self.assertFalse(group.have_item(group_name))
+
+    def test07_update_dependent_element(self):
+        group = self.item
+        group_name = "test_QWERT_" + str(random.randrange(150, 300))
+        params_dict = {"color": "КОРИЧН. МУАР", "Версия": ["Внутренняя"], "Регион": []}
+        product_params = (0, 'RSD 02', ('Цех', 'Кладовщик', 'Мастер'))
+        dependent_element_params = [
+            ["fx", ["Количество", "1"]],
+            ["version", ["Дилерская"]]
+        ]
+        group.add_item(group_name)
+        group._add_element(params_dict)
+        group.add_dependent_element(0, dependent_element_params)
+        group.add_product(product_params)
+        group.save_dependent_element()
+        group.save_element()
+        self.assertTrue(group._have_item())
+        group.to_update_element()
+        group.to_update_dependent_element()
+        new_product_params = (0, 'RSD 01', ('Монтажник',))
+        group.update_product(new_product_params)
+        group.save_dependent_element()
+        group.save_element()
+        self.assertTrue(group._have_item())
+        group.to_update_element()
+        self.assertTrue(group._have_dependent())
+        group.save_element()
+        group.delete_item(group_name)
+        self.assertFalse(group.have_item(group_name))
+
+    def test08_add_dependent_element_as_group(self):
+        group = self.item
+        group_name = "test_QWERT_" + str(random.randrange(150, 300))
+        params_dict = {"color": "КОРИЧН. МУАР", "Версия": ["Внутренняя"], "Регион": []}
+        product_params = (0, 'RSD 02', ('Цех', 'Кладовщик', 'Мастер'))
+        dependent_element_params = [
+            ["fx", ["Количество", "1"]],
+            ["version", ["Дилерская"]]
+        ]
+        group.add_item(group_name)
+        group._add_element(params_dict)
+        group.add_dependent_element(0, dependent_element_params, as_group=True)
+        group.add_product(product_params)
+        group.save_dependent_element()
+        group.save_element()
+        self.assertTrue(group._have_item())
+        group.to_update_element()
+        self.assertTrue(group._have_dependent())
+        group.save_element()
+        group.delete_item(group_name)
+        self.assertFalse(group.have_item(group_name))
+
+    def test09_remove_dependent_element(self):
+        group = self.item
+        group_name = "test_QWERT_" + str(random.randrange(150, 300))
+        params_dict = {"color": "КОРИЧН. МУАР", "Версия": ["Внутренняя"], "Регион": []}
+        product_params = (0, 'RSD 02', ('Цех', 'Кладовщик', 'Мастер'))
+        dependent_element_params = [
+            ["fx", ["Количество", "1"]],
+            ["version", ["Дилерская"]]
+        ]
+        group.add_item(group_name)
+        group._add_element(params_dict)
+        group.add_dependent_element(0, dependent_element_params, as_group=True)
+        group.add_product(product_params)
+        group.save_dependent_element()
+        group.save_element()
+        self.assertTrue(group._have_item())
+        group.to_update_element()
+        group.delete_dependent_element()
+        group.save_element()
+        group.to_update_element()
+        self.assertFalse(group._have_dependent())
+        group.save_element()
+        group.delete_item(group_name)
+        self.assertFalse(group.have_item(group_name))

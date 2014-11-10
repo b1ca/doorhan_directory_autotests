@@ -13,6 +13,7 @@ class Driver(SimpleItem):
     element_text = None
     additional_element_text = None
     product_mark = "NomenclatureDriverElementsProducts"
+    _product_mark = None
     additional_product_mark = "NomenclatureDriverAdditionalElementsProducts"
 
     def add_driver(self, additional_element_params_list, driver_type=None):
@@ -40,6 +41,7 @@ class Driver(SimpleItem):
             self.driver.find_element_by_css_selector("#submitButtonDriverSet").click()
 
     def add_product_for_additional_element(self):
+        self._product_mark = self.product_mark
         self.product_mark = self.additional_product_mark
         self.add_product()
 
@@ -70,6 +72,12 @@ class Driver(SimpleItem):
         wait_until_jquery(self, 5)
         self.add_product(product_params)
 
+    def add_second_product_to_additional_element(self, product_params):
+        self.product_mark = self._product_mark
+        self.driver.find_element_by_css_selector("#addInputAutoComplete").click()
+        wait_until_jquery(self, 5)
+        self.add_product(product_params)
+
     def save_element(self):
         self.driver.find_element_by_css_selector('#submitButton').click()
         wait_until_jquery(self, 5)
@@ -80,3 +88,12 @@ class Driver(SimpleItem):
 
     def to_update_dependent_element(self):
         self.driver.find_element_by_css_selector("a img[src*='update.png']").click()
+
+    def dependent_element_have_product(self, product_params):
+        product_count, product_type, checkbox_maps = product_params
+        product_params = product_count-1, product_type, checkbox_maps
+        return self.element_have_product(product_params)
+
+    def _element_have_dependent(self):
+        if "Подчиненные элементы не добавлены" in self.driver.find_element_by_css_selector('.tbl').text:
+            return False

@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import time
+from selenium.common.exceptions import NoSuchElementException
 
 from helpers.waits import *
 from helpers.actions_by_label_text import *
@@ -226,7 +227,7 @@ class SimpleItem(object):
                     "//*[contains(@for, '%s')][.='%s']/input" % (for_attr, checkbox_text)).is_selected())
             checkbox_maps_result = all(checkbox_maps_result)
             return all([product_result, product_field_result, checkbox_maps_result])
-        except IndexError, e:
+        except (IndexError, NoSuchElementException) as e:
             print e.message
             return False
 

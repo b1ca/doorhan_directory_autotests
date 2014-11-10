@@ -92,6 +92,7 @@ class TestsNomenclatureAdditional(BaseTest):
         return nom_addit
 
     def test05_add_dependent_element_to_first_product(self):
+        # bug in app, not in test
         params_list = [
             ["version", ["Внутренняя"]],
             ["region", ["СНГ"]],

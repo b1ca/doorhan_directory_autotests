@@ -56,21 +56,30 @@ class TestsShields3(BaseTest):
         shield.remove_cover()
         self.assertFalse(shield.have_cover())
 
-    # def test12_add_cover_as_group(self):
-    #     cover_name = "My_Custom_Cover"
-    #     shield = self.item
-    #     shield.choose_cover_group_by_name(cover_name)
-    #     cover_params = [
-    #         ["fx", ["Количество", "15"]],
-    #     ]
-    #     shield.add_cover(cover_params, as_group=True)
-    #
-    #     self.assertTrue(shield.have_cover())
-    #     shield.remove_cover()
-    #     self.assertFalse(shield.have_cover())
+    def test12_add_cover_as_group(self):
+        cover_name = "My_Custom_Cover"
+        shield = self.item
+        shield.choose_cover_group_by_name(cover_name)
+        cover_params = [
+            ["fx", ["Количество", "15"]],
+        ]
+        shield.add_cover(cover_params, as_group=True)
+        self.assertTrue(shield.have_cover())
+        shield.remove_cover()
+        self.assertFalse(shield.have_cover())
 
-    # def test13_update_cover(self):
-    #     pass
-    #
-    # def test14_remove_cover(self):
-    #     pass
+    def test13_update_cover(self):
+        cover_name = "My_Custom_Cover"
+        shield = self.item
+        shield.choose_cover_group_by_name(cover_name)
+        cover_params = [
+            ["fx", ["Количество", "15"]],
+        ]
+        product_params = (0, 'ISD 01', ())
+        shield.add_cover(cover_params)
+        shield.to_update_cover()
+        shield.add_product(product_params)
+        shield.save_cover()
+        self.assertTrue(shield.have_cover())
+        shield.remove_cover()
+        self.assertFalse(shield.have_cover())

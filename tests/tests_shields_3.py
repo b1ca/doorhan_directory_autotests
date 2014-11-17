@@ -2,10 +2,14 @@
 from __future__ import unicode_literals
 
 from basetest import BaseTest
+from pages.constructor_page import ConstructorPage
 from pages.main_page import MainPage
 
 
 class TestsShields3(BaseTest):
+
+    shield_name = 'Без защиты от защемления пальцев 475+500+525+550+575 RSD02, ISD01, ISD02'
+    cover_name = 'My_Custom_Cover1'
 
     def setUp(self):
         BaseTest.setUp(self)
@@ -14,22 +18,21 @@ class TestsShields3(BaseTest):
         self.item = constructor_page.navigate_shield()
 
     def test09_add_group_of_covers(self):
-        shield_name = "My_Custom_Shield"
         shield = self.item
-        shield.choose_item_by_name(shield_name)
+        shield.choose_item_by_name(self.shield_name)
         cover_params = [
             ["version", ["Внутренняя"]],
             ["region", ["СНГ"]],
         ]
+        shield.cover_name = 'My_Custom_Cover1'
         shield.add_cover_group(cover_params)
         self.assertTrue(shield.have_cover_group(shield.cover_name))
-        shield.remove_cover_group(shield.cover_name)
-        self.assertFalse(shield.have_cover_group(shield.cover_name))
+        # shield.remove_cover_group(shield.cover_name)
+        # self.assertFalse(shield.have_cover_group(shield.cover_name))
 
     def test10_update_group_of_covers(self):
-        shield_name = "My_Custom_Shield"
         shield = self.item
-        shield.choose_item_by_name(shield_name)
+        shield.choose_item_by_name(self.shield_name)
         cover_params = [
             ["version", ["Внутренняя"]],
             ["region", ["СНГ"]],
@@ -45,9 +48,8 @@ class TestsShields3(BaseTest):
         self.assertFalse(shield.have_cover_group(new_cover_name))
 
     def test11_add_cover(self):
-        cover_name = "My_Custom_Cover"
         shield = self.item
-        shield.choose_cover_group_by_name(cover_name)
+        shield.choose_cover_group_by_name(self.cover_name)
         cover_params = [
             ["fx", ["Количество", "15"]],
         ]
@@ -57,9 +59,8 @@ class TestsShields3(BaseTest):
         self.assertFalse(shield.have_cover())
 
     def test12_add_cover_as_group(self):
-        cover_name = "My_Custom_Cover"
         shield = self.item
-        shield.choose_cover_group_by_name(cover_name)
+        shield.choose_cover_group_by_name(self.cover_name)
         cover_params = [
             ["fx", ["Количество", "15"]],
         ]
@@ -69,9 +70,8 @@ class TestsShields3(BaseTest):
         self.assertFalse(shield.have_cover())
 
     def test13_update_cover(self):
-        cover_name = "My_Custom_Cover"
         shield = self.item
-        shield.choose_cover_group_by_name(cover_name)
+        shield.choose_cover_group_by_name(self.cover_name)
         cover_params = [
             ["fx", ["Количество", "15"]],
         ]
@@ -83,3 +83,7 @@ class TestsShields3(BaseTest):
         self.assertTrue(shield.have_cover())
         shield.remove_cover()
         self.assertFalse(shield.have_cover())
+
+        ConstructorPage(self.driver).navigate_shield()
+        shield.remove_cover_group(self.cover_name)
+        self.assertFalse(shield.have_cover_group(self.cover_name))
